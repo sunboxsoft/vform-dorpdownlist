@@ -1,0 +1,52 @@
+AMS-Portal-Web 项目中
+D:\test\opm05\AMS-Portal-Web\src\views\vform\modules\VFormDesignerModal.vue
+        <v-form-designer ref="vfDesigner" :field-list-api="fieldListApi" :field-sub-name-list-api="fieldSubNameListApi" :sub-field-list-api="subFieldListApi" :banned-widgets="testBanned" :designer-              config="designerConfig"  @setListName='getListName'  v-show="!spinning">
+          <!-- 自定义按钮插槽演示 -->
+          <template #customToolButtons>
+            <el-button type="text" @click="saveFormJson"><i class="el-icon-finished" />保存</el-button>
+            <el-button type="text" @click="closeFormJson"><a-icon type="close" />关闭</el-button>
+          </template>
+        </v-form-designer>
+
+  methods: {
+    getListName(val) {
+      if (val && val.options?.listName) {
+        this.$http.get('/design/dict/selectFieldsByFormIdWith', { params: { form_id: val.options?.listName?.name } }).then((res) => {
+          this.subFieldListApi.data = res.data
+          this.$refs.vfDesigner.loadSubFieldListFromServer(val.options?.listName)
+        })
+      }
+    }
+
+D:\work\VForm\variant-form-pro\src\components\form-designer\index.vue
+中间
+ <setting-panel
+          :designer="designer"
+          :selected-widget="designer.selectedWidget"
+          :form-config="designer.formConfig"
+          @setSettingWidgetName="setSettingWidgetName"
+        />
+
+
+ methods: {
+    setSettingWidgetName(v) {
+      //获取所有 子表单 集合
+      this.parentWidget_ = this.getContainerWidgets();
+      console.log(v, "TTTTTTTTTTTTTTTTT");
+      this.$emit("setListName", v);   
+      // setTimeout(() => {
+      //   this.loadSubFieldListFromServer(v)
+      // }, 0)
+    },
+
+
+里面
+D:\work\VForm\variant-form-pro\src\components\form-designer\setting-panel\index.vue
+ watch: {
+      //选中的项目 名称改变时  jiaguoqiang  
+      'selectedWidget.options.name': {
+        deep: true,
+        handler() {
+          this.$emit('setSettingWidgetName', this.parentWidget)  //触发 父组件 setSettingWidgetName方法 
+        },
+      },

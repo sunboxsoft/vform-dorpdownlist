@@ -1,0 +1,68 @@
+第一步
+D:\work\VForm\variant-form-pro\src\components\form-designer\setting-panel\property-editor\container-sub-form\fatherDropDownList-editor.vue
+  methods: {
+    selectChanged(value) {
+      this.selectedWidget.options.name = value;     //更新名称
+      // 模拟数据
+      this.selectedWidget.subOptionList = [    //其实也只有  type: 'sub-form', 中设置了 subOptionList 
+
+第二步
+D:\work\VForm\variant-form-pro\src\components\form-designer\setting-panel\propertyRegister.js
+关联性
+const COMMON_PROPERTIES = {
+    //字段
+    'name': 'name-editor',
+    'fatherTable': 'fatherDropDownList-editor',
+
+第三步
+D:\work\VForm\variant-form-pro\src\components\form-designer\widget-panel\widgetsConfig.js
+    {
+        type: 'sub-form',
+        category: 'container',
+        icon: 'sub-form',
+        widgetList: [],
+        subOptionList: [], // 存放 OnLine 表单列表，这个要带到子列表中
+        options: {
+            name: '',
+            fatherTable: '', // 新建的 fatherDropDownList-editor.vue
+
+//第四步
+D:\work\VForm\variant-form-pro\src\components\form-designer\setting-panel\index.vue
+setting-panel 文件夹   右侧属性设计编码
+而index.vue  是 上面fatherDropDownList-editor.vue 的 父容器
+
+ provide() {
+      return {
+        isSubFormChildWidget: () => this.subFormChildWidgetFlag,
+        parentWidget: () => this.parentWidget,
+      }
+    },
+
+ data() {
+      return {
+        subFormChildWidgetFlag: false,  //是否包含父组件
+        parentWidget:null,                       //父表单  
+
+ created() {
+      //监听字段组件选中事件  
+      this.designer.handleEvent('field-selected', (parentWidget) => {
+        this.parentWidget = parentWidget    //这是新加的代码，非常重要，保证子组件顺利获得父组件
+        this.subFormChildWidgetFlag = !!parentWidget && (parentWidget.type === 'sub-form'); 
+      })
+
+//第五步
+D:\work\VForm\variant-form-pro\src\components\form-designer\setting-panel\property-editor\name-editor.vue
+这是所有组件的文件名，这里
+<template></template>中已经进行了复杂的判断
+ inject: ['isSubFormChildWidget', 'parentWidget'], //接收上面一个文件，也就是外层组件 provide的两个属性
+  computed: {
+    noFieldList() {                                                                                    //注意 这里加入判断父组件的 subOptionList数组长度，只有sub-form才有
+      return  (!this.serverFieldList || this.serverFieldList.length <= 0) && this.parentWidget()?.subOptionList.length<=0;
+    },
+    _isSubFormChildWidget() {
+      return this.isSubFormChildWidget();
+    },
+    _parentWidgetOptions() {
+      return this.parentWidget()?.subOptionList;
+    },
+  }
