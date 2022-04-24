@@ -17,6 +17,17 @@
       selectedWidget: Object,
       optionModel: Object,
     },
+    methods: {
+      handleOpenDialog() {
+        if (this.selectedWidget.type === 'alert-table') {
+          this.initTableData()
+          this.$refs.alertTableDialogRef.open()
+        } else if (this.selectedWidget.type === 'tree-table') {
+          this.initTreeData()
+          this.$refs.treeTableDialogRef.open()
+        }
+      },
+    }
   }
 </script>
 
