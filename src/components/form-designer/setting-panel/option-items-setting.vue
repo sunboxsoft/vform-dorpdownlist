@@ -123,6 +123,23 @@
         }
       },
 
+      emitDefaultValueChange(val) {
+        if (!!this.designer) {
+          if (!!this.designer.formWidget) {
+            let fieldWidget = this.designer.formWidget.getWidgetRef(this.designer.selectedWidget.options.name)
+            if (!!fieldWidget && !!fieldWidget.refreshDefaultValue) {
+              fieldWidget.refreshDefaultValue(val)
+            }
+            if (this.designer.selectedWidget.type === 'alert-table') {
+              if (!!fieldWidget && !!fieldWidget.handleChangeEvent) {
+                fieldWidget.handleChangeEvent(val)
+              }
+            }
+          }
+        }
+      },
+
+
       deleteOption(option, index) {
         this.optionModel.optionItems.splice(index, 1)
       },

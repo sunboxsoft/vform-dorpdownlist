@@ -1035,9 +1035,27 @@ export const advancedFields = [{
 
 ]
 
-export const customFields = [
-
-]
+export const customFields = [{
+    type: 'alert-table',
+    icon: 'refresh-ccw-alert',
+    formItemFlag: false,
+    formItemFlag: false,
+    options: {
+        name: '',
+        title: '自定义弹框组件，怎样才能能编辑标题？...',
+        type: 'info',
+        description: '',
+        closable: true,
+        closeText: '',
+        center: true,
+        showIcon: false,
+        effect: 'light',
+        hidden: false,
+        onCreated: '',
+        onClose: '',
+        customClass: '',
+    }
+}, ]
 
 export function addContainerWidgetSchema(containerSchema) {
     containers.push(containerSchema)

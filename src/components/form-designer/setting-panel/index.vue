@@ -69,6 +69,13 @@
           <form-setting :designer="designer" :form-config="formConfig"></form-setting>
         </el-scrollbar>
       </el-tab-pane>
+ 
+      <!-- 数据源 第一步  选项卡-->
+      <el-tab-pane :label="i18nt('designer.setting.dataSource')" name="3">
+        <el-scrollbar class="ds-setting-scrollbar" :style="{height: scrollerHeight}">
+       <data-source-setting></data-source-setting>
+        </el-scrollbar>
+      </el-tab-pane>
     </el-tabs>
 
     <el-dialog :title="i18nt('designer.setting.editWidgetEventHandler')" :visible.sync="showWidgetEventDialogFlag"
@@ -92,6 +99,7 @@
   import CodeEditor from '@/components/code-editor/index'
   import PropertyEditors from './property-editor/index'
   import FormSetting from './form-setting'
+  import DataSourceSetting from './data-source-setting.vue'
   import WidgetProperties from './propertyRegister'
   import {
     addWindowResizeHandler,
@@ -108,17 +116,23 @@
     components: {
       CodeEditor,
       FormSetting,
+        DataSourceSetting,
       ...PropertyEditors,
     },
     props: {
       designer: Object,
       selectedWidget: Object,
       formConfig: Object,
+      globalDsv: {
+        type: Object,
+        default: () => {},
+      },
     },
     provide() {
       return {
         isSubFormChildWidget: () => this.subFormChildWidgetFlag,
         parentWidget: () => this.parentWidget,
+        getGlobalDsv: () => this.globalDsv, // 全局数据源变量
       }
     },
     inject: ['getDesignerConfig'],
